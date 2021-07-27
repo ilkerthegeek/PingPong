@@ -2,6 +2,7 @@
 # By @TokyoEdTech
 
 import turtle
+import os
 
 wn = turtle.Screen()
 wn.title("Pong")
@@ -26,7 +27,7 @@ paddle_a.goto(-350, 0)
 paddle_b = turtle.Turtle()
 paddle_b.speed(0)
 paddle_b.shape("square")
-paddle_b.color("white")
+paddle_b.color("yellow")
 paddle_b.shapesize(stretch_wid=5, stretch_len=1)
 paddle_b.penup()
 paddle_b.goto(350, 0)
@@ -38,6 +39,19 @@ ball.shape("square")
 ball.color("white")
 ball.penup()
 ball.goto(0, 0)
+ball.dx = 0.2
+ball.dy = -0.2
+
+#Pen
+
+pen = turtle.Turtle()
+pen.speed(0)
+pen.color("white")
+pen.penup()
+pen.hideturtle()
+pen.goto(0, 250)
+pen.write("Player A : {}  and Player B : {}".format(score_a, score_b), align="center",
+                  font=("Courier", 24, "normal"))
 
 
 # Functions
@@ -74,3 +88,54 @@ wn.onkeypress(paddle_b_down, "Down")
 # Main game loop
 while True:
     wn.update()
+    print(score_b)
+    ball.setx(ball.xcor() + ball.dx)
+    ball.sety(ball.ycor() + ball.dy)
+
+    # Border Checking
+    if ball.ycor() > 290:
+        ball.sety(290)
+        ball.dy *= -1
+        os.system("afplay bounce.wav&")
+
+    if ball.ycor() < -290:
+        ball.sety(-290)
+        ball.dy *= -1
+        os.system("afplay bounce.wav&")
+    if ball.xcor() > 390:
+        ball.goto(0, 0)
+        ball.dx *= -1
+        score_a += 1
+        pen.clear()
+        pen.write("Player A : {}  and Player B : {}".format(score_a, score_b), align="center",
+                  font=("Courier", 24, "normal"))
+    if ball.xcor() < -390:
+        ball.goto(0, 0)
+        ball.dx *= -1
+        score_b += 1
+
+        pen.clear()
+        pen.write("Player A : {}  and Player B : {}".format(score_a, score_b), align="center",
+                  font=("Courier", 24, "normal"))
+
+    # Paddle and collisions
+
+    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < paddle_b.ycor() + 50 and ball.ycor() > paddle_b.ycor()-50):
+        ball.setx(340)
+        ball.dx *= -1
+        os.system("afplay bounce.wav&")
+
+    if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < paddle_a.ycor() + 50 and ball.ycor() > paddle_a.ycor()-50):
+        ball.setx(-340)
+        os.system("afplay bounce.wav&")
+        ball.dx *= -1
+
+
+
+
+
+
+
+
+
+
